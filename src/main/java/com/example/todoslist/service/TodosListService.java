@@ -37,8 +37,7 @@ public class TodosListService {
 
         TodosList list = getList(listId);
         list.getTasks().add(task);
-        repository.save(list);
-        return getList(listId);
+        return repository.save(list);
     }
 
     public List<TodosList> deleteList(long id) {
@@ -46,7 +45,7 @@ public class TodosListService {
         if (repository.existsById(id)) {
             repository.deleteById(id);
         } else {
-            throw new IllegalArgumentException("Invalid list reference:" + id);
+            throw new IllegalArgumentException("Invalid list reference: " + id);
         }
         return getAllLists();
     }
