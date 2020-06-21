@@ -20,8 +20,10 @@ public class TodosList {
     @NotBlank(message = "List name cannot be null or empty")
     private String listName;
 
+    public boolean isActive = false;
+
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name="tasks", joinColumns = @JoinColumn(columnDefinition = "list_id"))
+    @CollectionTable(name = "tasks", joinColumns = @JoinColumn(columnDefinition = "list_id"))
     private List<TodoTask> tasks;
 
 }

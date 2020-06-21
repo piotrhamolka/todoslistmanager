@@ -16,7 +16,7 @@
         <div class="card-body">
             <div th:switch="${lists}" class="container my-5">
                 <p class="my-5">
-                    <a href="/edit" class="btn btn-primary">
+                    <a href="/add-new-list" class="btn btn-primary">
                         <i class="fas fa-plus ml-2"> Add List </i></a>
                 </p>
                 <div class="col-md-10">
@@ -26,21 +26,35 @@
                             <thead>
                             <tr>
                                 <th>List name</th>
+                                <th>List status</th>
                                 <th>List tasks</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr th:each="list : ${lists}">
                                 <td th:text="${list.listName}"></td>
-
+                                <td>
+                                    <div th:if="${list.isActive}">
+                                        <div>In progress</div>
+                                    </div>
+                                    <div th:unless="${list.isActive}">
+                                        <div>Pending</div>
+                                    </div>
+                                </td>
                                 <td>
                                     <p th:each="task : ${list.tasks}">
                                         <a th:text="${task.taskName}"></a>
                                         :
-                                        <a th:text="${task.isCompleted}"></a>
+                                        <a th:if="${task.isCompleted}">In progress</a>
+                                        <a th:unless="${task.isCompleted}">Completed</a>
                                     </p>
                                 </td>
 
+                                <td>
+                                    <a th:href="@{/toggle/{id}(id=${list.id})}" class="btn btn-primary">
+                                        <i class="fa fa-toggle-on" aria-hidden="true"> Toggle list on/off </i>
+                                    </a>
+                                </td>
                                 <td>
                                     <a th:href="@{/edit/{id}(id=${list.id})}" class="btn btn-primary">
                                         <i class="fas fa-edit"> Edit List </i>
@@ -55,7 +69,6 @@
                             </tbody>
                         </table>
                     </div>
-
                 </div>
             </div>
         </div>

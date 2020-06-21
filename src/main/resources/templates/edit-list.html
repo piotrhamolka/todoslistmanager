@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Edit list</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+</head>
+
+<body>
+<div class="container my-2">
+    <div class="card">
+        <div class="card-body">
+            <div class="container my-5">
+                <p class="my-5">
+                    <a th:href="@{/add-new-task/{id}(id=${list.id})}">
+                        <i class="fas fa-plus ml-2"> Add new task </i></a>
+                </p>
+                <div class="col-md-10">
+                    <table class="table table-striped table-responsive-md">
+                        <thead>
+                        <tr>
+                            <th>List name</th>
+                            <th>List status</th>
+                            <th>List tasks</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td th:text="${list.listName}"></td>
+                            <td>
+                                <a th:if="${list.isActive}">
+                                    In progress
+                                </a>
+                                <a th:unless="${list.isActive}">
+                                    Pending
+                                </a>
+                            </td>
+                            <td>
+                                <p th:each="task : ${list.tasks}">
+                                    <a th:text="${task.taskName}"></a>
+                                    :
+                                    <a th:if="${task.isCompleted}">In progress</a>
+                                    <a th:unless="${task.isCompleted}">Completed</a>
+
+                                    <a th:href="@{/toggle/{id}/{name}(id=${list.id},name=${task.taskName})}" class="btn btn-primary">
+                                        <i class="fa fa-toggle-on" aria-hidden="true"> Switch task status </i>
+                                    </a>
+                                    <a th:href="@{/delete/{id}/{name}(id=${list.id},name=${task.taskName})}" class="btn btn-primary">
+                                        <i class="fas fa-trash"> Delete task </i>
+                                    </a>
+                                </p>
+                            </td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="my-5">
+                    <a href="/lists" class="btn btn-primary">
+                        <i class="fas fa-arrow-left"> To main page </i>
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
