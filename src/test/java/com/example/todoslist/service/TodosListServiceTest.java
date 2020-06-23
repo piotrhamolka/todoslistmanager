@@ -4,36 +4,25 @@ import com.example.todoslist.model.TodoTask;
 import com.example.todoslist.model.TodosList;
 import com.example.todoslist.repository.TodosListRepository;
 import org.junit.Before;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 public class TodosListServiceTest {
 
-    @TestConfiguration
-    static class TodosListServiceTestContextConfiguration {
-
-        @Bean
-        public TodosListService service() {
-            return new TodosListService();
-        }
-    }
-
-    @Autowired
+    @InjectMocks
     private TodosListService service;
 
-    @MockBean
+    @Mock
     private TodosListRepository repository;
 
     private TodosList list1, list2;
@@ -69,7 +58,7 @@ public class TodosListServiceTest {
         list2.setActive(false);
         list2.setTasks(tasks);
 
-        Mockito.when(repository.findAll())
+        when(repository.findAll())
                 .thenReturn(Arrays.asList(list1, list2));
 
     }
