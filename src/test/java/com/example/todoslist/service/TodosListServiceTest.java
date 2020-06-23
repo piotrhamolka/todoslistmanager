@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TodosListServiceTest {
 
     @TestConfiguration
-    static class odosListServiceTestContextConfiguration {
+    static class TodosListServiceTestContextConfiguration {
 
         @Bean
         public TodosListService service() {
@@ -63,7 +63,6 @@ public class TodosListServiceTest {
         list1.setListName("List 1");
         list1.setTasks(tasks);
         list1.setActive(true);
-        list1.setTasks(Arrays.asList(task1, task2, task3));
 
         list2 = new TodosList();
         list2.setListName("List 2");
@@ -247,7 +246,6 @@ public class TodosListServiceTest {
         list5.setListName("List 5");
         list5.setTasks(tasks);
         list5.setActive(true);
-        list5.setTasks(tasks);
 
         Mockito.when(repository.findById(list5.getId()))
                 .thenReturn(Optional.of(list5));
@@ -266,6 +264,56 @@ public class TodosListServiceTest {
                 .isEqualTo("task 6");
         assertThat(found.getTasks().get(1).getTaskName())
                 .isEqualTo("task 7");
+    }
+
+    @Test
+    public void whenToggleList_thenToggledListShouldBeFound() {
+
+        Mockito.when(repository.findById(list1.getId()))
+                .thenReturn(Optional.of(list1));
+        Mockito.when(repository.save(list1))
+                .thenReturn(list1);
+        Mockito.when(repository.findAll())
+                .thenReturn(Arrays.asList(list1, list2));
+
+        // list 1 to be toggled to false, list 2 keeps storing its initial false value
+        List<TodosList> found = service.toggleList(list1.getId());
+
+        assertThat(found.size())
+                .isEqualTo(2);
+        assertThat(found.get(0).getListName())
+                .isEqualTo("List 1");
+        assertThat(found.get(1).getListName())
+                .isEqualTo("List 2");
+
+        assertThat(found.get(0).isActive())
+                .isFalse();
+        assertThat(found.get(1).isActive())
+                .isFalse();
+    }
+
+    @Test
+    public void whenToggleTask_thenToggledTaskShouldBeFound() {
+
+        Mockito.when(repository.findById(list1.getId()))
+                .thenReturn(Optional.of(list1));
+        Mockito.when(repository.save(list1))
+                .thenReturn(list1);
+
+        // Task 2 of the list 1 to be toggled to true (completed), others should keep storing their initial values
+        TodosList found = service.toggleTask(list1.getId(), task2.getTaskName());
+
+        assertThat(found)
+                .isNotNull();
+        assertThat(found.getListName())
+                .isEqualTo("List 1");
+
+        assertThat(found.getTasks().get(0).isCompleted())
+                .isFalse();
+        assertThat(found.getTasks().get(1).isCompleted())
+                .isTrue();
+        assertThat(found.getTasks().get(2).isCompleted())
+                .isTrue();
     }
 
 }
